@@ -24,6 +24,7 @@ class Board
       new_piece = piece.piece_dup(duped_board)
       duped_board[new_piece.position] = new_piece
     end
+
     duped_board
   end
 
@@ -57,22 +58,14 @@ class Board
   end
 
   def find_pieces(color)
-    piece_list = []
-    @grid.each_index do |y|
-      @grid[y].each_index do |x|
-        current_object = @grid[y][x]
-        next if current_object == nil
-        piece_list << current_object if current_object.color == color
-      end
-    end
-    piece_list
+    @grid.flatten.compact.select { |object| object.color == color }
   end
 
   def in_check?(color)
-    king_pos = find_king(color)
+    king = find_pieces(color).find{ |object| object.class == King }
     other_player = (color == :white ? :black : :white)
     other_player_all_moves = find_all_moves(other_player)
-    other_player_all_moves.include?(king_pos)
+    other_player_all_moves.include?(king.position)
   end
 
   def in_checkmate?(color)
@@ -96,15 +89,6 @@ class Board
 
 private
 
-  def find_king(color)
-    @grid.each_index do |y|
-      @grid[y].each_index do |x|
-        current_object = @grid[y][x]
-        next if current_object == nil
-        return current_object.position if current_object.class == King && current_object.color == color
-      end
-    end
-  end
 
   def find_all_moves(color)
     all_pieces = find_pieces(color)
@@ -112,7 +96,7 @@ private
     all_pieces.each do |piece|
       all_moves = all_moves + piece.move_dirs
     end
+
     all_moves.compact
   end
-
 end
