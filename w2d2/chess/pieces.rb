@@ -1,5 +1,5 @@
 class Pieces
-  attr_reader  :board, :color, :moved
+  attr_reader  :board, :color
   attr_accessor :moved, :position
 
   def initialize(pos, board, color, moved=false)
@@ -31,11 +31,10 @@ class Pieces
   end
 
   def symbol
-    raise NotImplementedError.new
+    raise "Undefined."
   end
 
   def piece_dup(duped_board)
     self.class.new(@position.dup, duped_board, @color, @moved)
   end
-
 end

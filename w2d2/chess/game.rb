@@ -1,5 +1,6 @@
 require 'yaml'
 require_relative 'piece_requires'
+require 'keypress'
 
 class Game
 
@@ -30,7 +31,7 @@ class Game
         @board.update(start_pos, end_pos)
         @board.display
         turn_switch
-      end
+      endp
     end
     turn_switch
     puts "Game over! #{@turn.color.to_s.capitalize} won!".green
@@ -66,7 +67,7 @@ private
     pawn_row = (color == :white ? start_row - 1 : start_row + 1)
     @board.grid[pawn_row].each_index do |idx|
       @board.grid[pawn_row][idx] = Pawn.new([pawn_row, idx], @board, color)
-    end    
+    end
   end
 
   def turn_switch
@@ -80,6 +81,7 @@ end
 if __FILE__ == $PROGRAM_NAME
   if File.exist?('chess_last_game.yml')
     game = YAML.load_file('chess_last_game.yml')
+    system "rm chess_last_game.yml"
   else
     game = Game.new
   end
